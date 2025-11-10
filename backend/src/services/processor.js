@@ -24,7 +24,12 @@ const simulateProcessing = (io, video) => {
     if (progress >= 100) {
       clearInterval(interval);
 
-      const filePath = path.join(__dirname, "../../uploads", video.filename);
+      const filePath = path.join(
+        __dirname,
+        "../../uploads",
+        video.tenantId,
+        video.filename
+      );
 
       const sensitivity = await ffmpegSensitivityCheck(filePath);
 

@@ -112,7 +112,7 @@ export default function Dashboard() {
               >
                 <div className="flex-1">
                   <div className="text-lg font-semibold text-gray-800">
-                    {v.originalName}
+                    {v.filename}
                   </div>
                   <div className="text-sm text-gray-500 mt-1">
                     Status: <span className="font-medium">{v.status}</span> •

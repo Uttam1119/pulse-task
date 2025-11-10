@@ -175,7 +175,7 @@ export default function AdminDashboard() {
               >
                 <div className="flex-1">
                   <div className="text-lg font-semibold text-gray-800">
-                    {v.originalName}
+                    {v.filename}
                   </div>
                   <div className="text-sm text-gray-500 mt-1">
                     Tenant:{" "}
