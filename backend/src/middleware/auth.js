@@ -7,9 +7,11 @@ const authMiddleware = async (req, res, next) => {
   const token = header.split(" ")[1];
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(payload.id);
+    const user = await User.findById(payload.id).select("-password");
     if (!user) return res.status(401).json({ message: "Invalid token" });
     req.user = user;
+    req.user.role = payload.role;
+    req.user.tenantId = payload.tenantId;
     next();
   } catch (err) {
     return res
