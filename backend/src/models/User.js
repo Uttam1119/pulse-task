@@ -11,12 +11,11 @@ const UserSchema = new mongoose.Schema(
       enum: ["viewer", "editor", "admin"],
       default: "viewer",
     },
-    tenantId: { type: String, required: true }, // simple multi-tenant support
+    tenantId: { type: String, required: true },
   },
   { timestamps: true }
 );
 
-// hash password
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   const salt = await bcrypt.genSalt(10);
