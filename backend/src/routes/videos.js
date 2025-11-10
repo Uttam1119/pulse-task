@@ -63,7 +63,6 @@ router.get("/", auth, permit("viewer", "editor", "admin"), async (req, res) => {
   const videos = await Video.find({ tenantId }).sort({ createdAt: -1 });
   res.json({ videos });
 });
-
 // get single video metadata
 router.get("/:id", auth, async (req, res) => {
   const v = await Video.findById(req.params.id);
@@ -111,16 +110,77 @@ router.get("/stream/:id", async (req, res) => {
   }
 });
 
+// admin - get all videos
+router.get("/admin/all", auth, permit("admin"), async (req, res) => {
+  console.log(
+    "ADMIN FETCH TRIGGERED BY:",
+    req.user.email,
+    "role:",
+    req.user.role
+  );
+
+  try {
+    const videos = await Video.find({})
+      .populate("owner", "email tenantId role")
+      .sort({ createdAt: -1 });
+
+    res.json({ videos });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "failed to fetch all videos" });
+  }
+});
+
 // delete video (editor/admin)
 router.delete("/:id", auth, permit("editor", "admin"), async (req, res) => {
-  const v = await Video.findById(req.params.id);
-  if (!v) return res.status(404).json({ message: "not found" });
-  if (v.tenantId !== req.user.tenantId)
-    return res.status(403).json({ message: "forbidden" });
-  const filePath = path.join(UPLOAD_DIR, v.filename);
-  fs.unlink(filePath, (err) => {});
-  await Video.deleteOne({ _id: v._id });
-  res.json({ message: "deleted" });
+  try {
+    const v = await Video.findById(req.params.id);
+    if (!v) return res.status(404).json({ message: "not found" });
+
+    if (req.user.role !== "admin" && v.tenantId !== req.user.tenantId)
+      return res.status(403).json({ message: "forbidden" });
+
+    const filePath = path.join(UPLOAD_DIR, v.filename);
+    fs.unlink(filePath, () => {});
+    await Video.deleteOne({ _id: v._id });
+
+    res.json({ message: "deleted" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "failed to delete video" });
+  }
+});
+
+// admin - update video status or sensitivity
+router.patch("/:id", auth, permit("admin"), async (req, res) => {
+  try {
+    const { status, sensitivity } = req.body;
+
+    const update = {};
+
+    if (status) {
+      if (!["uploaded", "processing", "processed", "failed"].includes(status))
+        return res.status(400).json({ message: "invalid status value" });
+      update.status = status;
+    }
+
+    if (sensitivity) {
+      if (!["safe", "flagged", "unknown"].includes(sensitivity))
+        return res.status(400).json({ message: "invalid sensitivity value" });
+      update.sensitivity = sensitivity;
+    }
+
+    const video = await Video.findByIdAndUpdate(req.params.id, update, {
+      new: true,
+    });
+
+    if (!video) return res.status(404).json({ message: "not found" });
+
+    res.json({ message: "video updated", video });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "failed to update video" });
+  }
 });
 
 module.exports = router;
