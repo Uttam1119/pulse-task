@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import VideoPlayer from "./pages/VideoPlayer";
+import UploadPage from "./pages/UploadPage";
+import RequireRole from "./components/RequireRole";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -38,8 +39,16 @@ function App() {
         />
 
         <Route
-          path="/video/:id"
-          element={token ? <VideoPlayer /> : <Navigate to="/login" />}
+          path="/upload"
+          element={
+            token ? (
+              <RequireRole roles={["editor", "admin"]}>
+                <UploadPage />
+              </RequireRole>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
       </Routes>
     </BrowserRouter>
