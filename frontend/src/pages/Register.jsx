@@ -43,7 +43,12 @@ export default function Register({ setToken }) {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       setToken(res.data.token);
-      nav("/");
+      const userRole = res.data.user.role;
+      if (userRole === "admin") {
+        nav("/admin");
+      } else {
+        nav("/");
+      }
     } catch (err) {
       alert(err?.response?.data?.message || err.message);
     }

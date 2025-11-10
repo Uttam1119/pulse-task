@@ -71,7 +71,7 @@ router.get("/:id", auth, async (req, res) => {
   res.json({ video: v });
 });
 
-// stream with range requests
+// stream a single video
 router.get("/stream/:id", async (req, res) => {
   try {
     const id = req.params.id;

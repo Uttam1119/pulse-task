@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import UploadPage from "./pages/UploadPage";
 import RequireRole from "./components/RequireRole";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -35,7 +36,17 @@ function App() {
 
         <Route
           path="/"
-          element={token ? <Dashboard /> : <Navigate to="/login" />}
+          element={
+            token ? (
+              JSON.parse(localStorage.getItem("user"))?.role === "admin" ? (
+                <Navigate to="/admin" />
+              ) : (
+                <Dashboard />
+              )
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
 
         <Route
@@ -44,6 +55,19 @@ function App() {
             token ? (
               <RequireRole roles={["editor", "admin"]}>
                 <UploadPage />
+              </RequireRole>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            token ? (
+              <RequireRole roles={["admin"]}>
+                <AdminDashboard />
               </RequireRole>
             ) : (
               <Navigate to="/login" />
