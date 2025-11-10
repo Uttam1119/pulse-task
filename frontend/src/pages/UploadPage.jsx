@@ -7,13 +7,18 @@ const SOCKET_URL = import.meta.env.VITE_API_BASE || "http://localhost:4000";
 
 export default function UploadPage() {
   const [file, setFile] = useState(null);
+
   const [uploadProgress, setUploadProgress] = useState(0);
+
+  const [processingProgress, setProcessingProgress] = useState(0);
+
   const [videoId, setVideoId] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const nav = useNavigate();
 
   useEffect(() => {
     if (!videoId) return;
+
     const socket = io(SOCKET_URL);
 
     socket.on("connect", () => {
@@ -21,10 +26,11 @@ export default function UploadPage() {
     });
 
     socket.on("processing:update", ({ progress }) => {
-      setUploadProgress(progress);
+      setProcessingProgress(progress);
     });
 
     socket.on("processing:done", ({ sensitivity }) => {
+      setProcessingProgress(100);
       alert("Processing complete: " + sensitivity);
       nav("/");
     });
@@ -41,6 +47,7 @@ export default function UploadPage() {
 
     try {
       setIsUploading(true);
+
       const res = await api.post("/videos/upload", fd, {
         headers: { "Content-Type": "multipart/form-data" },
         onUploadProgress: (p) => {
@@ -48,7 +55,9 @@ export default function UploadPage() {
           setUploadProgress(progress);
         },
       });
+
       setVideoId(res.data.video._id);
+      setUploadProgress(100);
     } catch (err) {
       alert(err?.response?.data?.message || err.message);
     } finally {
@@ -94,19 +103,33 @@ export default function UploadPage() {
           </button>
         </form>
 
-        {isUploading || uploadProgress > 0 ? (
+        {uploadProgress > 0 && uploadProgress < 100 && (
           <div className="mt-6">
             <div className="w-full bg-gray-200 h-4 rounded-full overflow-hidden">
               <div
                 style={{ width: `${uploadProgress}%` }}
-                className="h-4 bg-gradient-to-r from-blue-500 to-blue-700 transition-all duration-300"
+                className="h-4 bg-blue-600 transition-all duration-300"
               ></div>
             </div>
             <p className="mt-2 text-center text-gray-700 font-medium">
-              {uploadProgress}% Completed
+              Uploading: {uploadProgress}%
             </p>
           </div>
-        ) : null}
+        )}
+
+        {videoId && uploadProgress === 100 && (
+          <div className="mt-6">
+            <div className="w-full bg-gray-200 h-4 rounded-full overflow-hidden">
+              <div
+                style={{ width: `${processingProgress}%` }}
+                className="h-4 bg-green-600 transition-all duration-300"
+              ></div>
+            </div>
+            <p className="mt-2 text-center text-gray-700 font-medium">
+              Processing: {processingProgress}%
+            </p>
+          </div>
+        )}
 
         <button
           onClick={() => nav("/")}
