@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import VideoPlayer from "./pages/VideoPlayer";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -34,6 +35,11 @@ function App() {
         <Route
           path="/"
           element={token ? <Dashboard /> : <Navigate to="/login" />}
+        />
+
+        <Route
+          path="/video/:id"
+          element={token ? <VideoPlayer /> : <Navigate to="/login" />}
         />
       </Routes>
     </BrowserRouter>
