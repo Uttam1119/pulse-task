@@ -4,7 +4,10 @@ const authRoutes = require("./routes/auth");
 const videoRoutes = require("./routes/videos");
 
 const app = express();
-const allowedOrigins = ["http://localhost:3000"];
+const allowedOrigins = [
+  "https://pulse-task.vercel.app",
+  "http://localhost:3000",
+];
 
 app.use(
   cors({
