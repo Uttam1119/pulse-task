@@ -85,7 +85,7 @@ export default function UploadPage() {
             />
             {file && (
               <p className="mt-2 text-gray-600 text-sm">
-                🎬 <b>{file.name}</b>
+                <b>{file.name}</b>
               </p>
             )}
           </div>

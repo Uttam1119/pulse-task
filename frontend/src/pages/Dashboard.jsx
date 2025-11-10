@@ -57,7 +57,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 flex flex-col relative">
       <header className="flex justify-between items-center p-6 shadow-sm bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-10">
         <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-          🎥 <span>Video Library</span>
+          <span>Video Library</span>
         </h1>
 
         <div className="relative">
@@ -130,7 +130,7 @@ export default function Dashboard() {
                     onClick={() => openVideo(v)}
                     className="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium"
                   >
-                    ▶️ Play
+                    Play
                   </button>
 
                   {canEdit && (
@@ -138,7 +138,7 @@ export default function Dashboard() {
                       onClick={() => deleteVideo(v._id)}
                       className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium"
                     >
-                      🗑 Delete
+                      Delete
                     </button>
                   )}
                 </div>

@@ -86,7 +86,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 flex flex-col relative">
       <header className="flex justify-between items-center p-6 shadow-sm bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-10">
         <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-          🛠 <span>Admin Dashboard</span>
+          <span>Admin Dashboard</span>
         </h1>
 
         <div className="relative">
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
             to="/upload"
             className="inline-block px-5 py-2 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 transition self-start md:self-auto"
           >
-            ⬆️ Upload Video
+            Upload Video
           </Link>
 
           <div className="flex flex-wrap gap-4 items-center">
@@ -206,14 +206,14 @@ export default function AdminDashboard() {
                     onClick={() => openVideo(v)}
                     className="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium"
                   >
-                    ▶️ Play
+                    Play
                   </button>
 
                   <button
                     onClick={() => deleteVideo(v._id)}
                     className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium"
                   >
-                    🗑 Delete
+                    Delete
                   </button>
 
                   {v.sensitivity === "flagged" ? (
@@ -221,14 +221,14 @@ export default function AdminDashboard() {
                       onClick={() => toggleSensitivity(v._id, "safe")}
                       className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
                     >
-                      ✅ Mark Safe
+                      Mark Safe
                     </button>
                   ) : (
                     <button
                       onClick={() => toggleSensitivity(v._id, "flagged")}
                       className="px-5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition font-medium"
                     >
-                      🚩 Mark Flagged
+                      Mark Flagged
                     </button>
                   )}
                 </div>
